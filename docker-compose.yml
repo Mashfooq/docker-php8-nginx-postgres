@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  service-app:
+    build: 
+      context: .
+      dockerfile: config/Dockerfile
+    image: hello-world-psg
+    ports:
+      - "9000:9000"
+    networks:
+      - myapp_network
+
+  service-postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    networks:
+      - myapp_network
+
+  service-pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mohammadh@unicourt.com
+      PGADMIN_DEFAULT_PASSWORD: 123mash
+    networks:
+      - myapp_network
+
+networks:
+  myapp_network:
+    driver: bridge
